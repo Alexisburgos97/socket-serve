@@ -7,7 +7,7 @@ import * as socket from '../sockets/sockets';
 
 export default class Server {
 
-    private static _intance: Server;
+    private static _instance: Server;
 
     public app: express.Application;
     public port: number;
@@ -36,8 +36,8 @@ export default class Server {
         this.escucharSockets();
     }
 
-    public static get intance(){
-        return this._intance || ( this._intance = new Server() );
+    public static get instance(){
+        return this._instance || ( this._instance = new Server() );
     }
 
     private escucharSockets(){
@@ -45,7 +45,12 @@ export default class Server {
         console.log('Escuchando conexiones - sockets');
 
         this.io.on('connection', cliente => {
-            console.log('Cliente conectado');
+
+            //Conectar Cliente
+            socket.conectarCliente(cliente);
+
+            //Configurar usuario
+            socket.configurarUsuario(cliente, this.io);
 
             //Mensajes
             socket.mensaje(cliente, this.io);
